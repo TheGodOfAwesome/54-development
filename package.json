@@ -32,6 +32,7 @@
     "react-no-ssr": "^1.1.0",
     "stylis": "^4.1.1",
     "stylis-plugin-rtl": "2.0.2",
+    "thirdweb": "^5.60.0",
     "typescript": "^4.9.4",
     "web-vitals": "^1.1.2"
   },
