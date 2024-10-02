@@ -26,6 +26,12 @@ const routes: IRoute[] = [
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
   },
   {
+    name: 'home',
+    layout: '/',
+    path: '/',
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+  },  
+  {
     name: 'NFT Marketplace',
     layout: '/admin',
     path: '/nft-marketplace',
