@@ -1,18 +1,23 @@
 /* eslint-disable */
+
+import { useState, useEffect } from 'react';
+
 // Chakra Imports
 import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Image,
   Flex,
   Link,
   Text,
   useColorModeValue
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
 import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
 import { isWindowAvailable } from 'utils/navigation'
+
+import logo from '/public/img/layout/logo.png';
 
 export default function AdminNavbar (props: {
   secondary: boolean
@@ -98,9 +103,9 @@ export default function AdminNavbar (props: {
       w={{
         base: 'calc(100vw - 6%)',
         md: 'calc(100vw - 8%)',
-        lg: 'calc(100vw - 6%)',
-        xl: 'calc(100vw - 350px)',
-        '2xl': 'calc(100vw - 365px)'
+        lg: 'calc(100vw - 4%)',
+        xl: 'calc(100vw - 4%)',
+        '2xl': 'calc(100vw - 4%)'
       }}
     >
       <Flex
@@ -113,39 +118,25 @@ export default function AdminNavbar (props: {
         mb={gap}
       >
         <Box mb={{ sm: '8px', md: '0px' }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                Pages
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem color={secondaryText} fontSize='sm'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
           {/* Here we create navbar brand, based on route name */}
-          <Link
-            color={mainText}
-            href='#'
-            bg='inherit'
-            borderRadius='inherit'
-            fontWeight='bold'
-            fontSize='34px'
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: 'inherit',
-              transform: 'none',
-              borderColor: 'transparent'
-            }}
-            _focus={{
-              boxShadow: 'none'
-            }}
-          >
-            {brandText}
-          </Link>
+
+          <article>
+            <Link href="/">
+              <Image src={logo.src} width="40px" borderRadius="16px" alt="" style={{float: "left", marginRight:"5px"}} />
+            </Link>
+            <Link href="/home" paddingLeft="30px" _hover={{ color: { mainText } }}>
+              Home
+            </Link>
+            <Link href="/portfolio" paddingLeft="30px" _hover={{ color: { mainText } }}>
+              Portfolio
+            </Link>
+            <Link  href="/profile" paddingLeft="30px" _hover={{ color: { mainText } }}>
+              Profile
+            </Link>
+          </article>
+
+          
+
         </Box>
         <Box ms='auto' w={{ sm: '100%', md: 'unset' }}>
           <AdminNavbarLinks
