@@ -385,7 +385,7 @@ export default function NftMarketplace() {
             gap="20px"
             mb="20px"
           >
-            <MiniStatistics growth="+23%" name="Total Balance" value="$574.34" />
+            <MiniStatistics growth="+0%" name="Total Balance" value="$0.00" />
             <MiniStatistics
               startContent={
                 <IconBox
@@ -397,9 +397,9 @@ export default function NftMarketplace() {
                   }
                 />
               }
-              name="Token Balance"
+              name="Total Invested"
               value={"$" + walletAddress && blncOfERC20 ? toEther(blncOfERC20) : "0"} 
-              // value="$0" 
+              // value="$0"   
             />
             {/* <Link
               onClick={()=>{alert("Buy")}}

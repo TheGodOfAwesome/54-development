@@ -94,7 +94,7 @@ export default function Default() {
           name="Spend this month"
           value="$642.39"
         />
-        <MiniStatistics growth="+23%" name="Sales" value="$574.34" />
+        <MiniStatistics growth="+0%" name="Sales" value="$0.00" />
         <MiniStatistics
           endContent={
             <Flex me="-16px" mt="10px">
