@@ -1,4 +1,7 @@
 'use client';
+
+
+import { useEffect } from "react";
 // Chakra Imports
 import {
   Box,
@@ -26,6 +29,11 @@ import { FaEthereum } from 'react-icons/fa';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { MdInfoOutline, MdNotificationsNone } from 'react-icons/md';
 import routes from 'routes';
+import { ThirdwebClient, createThirdwebClient } from 'thirdweb';
+import { useActiveWalletConnectionStatus, UseConnectModalOptions, useConnectedWallets, useActiveWallet, useWalletDetailsModal } from "thirdweb/react";
+// import { toEther, toWei, useAddress, useBalance, useContract, useContractRead, useContractWrite, useSDK, useTokenBalance } from "@thirdweb-dev/react";
+
+
 export default function HeaderLinks(props: {
   secondary: boolean;
   onOpen: boolean | any;
@@ -47,6 +55,42 @@ export default function HeaderLinks(props: {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)',
   );
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+
+  // const { clientAlchemy } = useSmartAccountClient({
+  //   type: "MultiOwnerModularAccount",
+  // });
+
+  const wallets = useConnectedWallets();
+  const wallet = useActiveWallet();
+  
+  const client = createThirdwebClient({
+    clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
+  })
+  
+  const { open } = useWalletDetailsModal();
+
+  function handleClick() {
+    open({ client, theme: "light" });
+  }
+  
+  function shortenAddress(address: string): string {
+    if (!address) return "";
+  
+    const prefix = address.slice(0, 6);
+    const suffix = address.slice(-4);
+  
+    return `${prefix}...${suffix}`;
+  }
+
+  useEffect(() => {
+    // alert(JSON.stringify(wallets));
+
+    const fetchUserData = async () => {
+
+    }
+    
+    fetchUserData();
+  },[])
 
   return (
     <Flex
@@ -103,7 +147,7 @@ export default function HeaderLinks(props: {
           </Text>
         </Text>
       </Flex>
-      <SidebarResponsive routes={routes} />
+      {/* <SidebarResponsive routes={routes} /> */}
       <Menu>
         <MenuButton p="0px">
           <Icon
@@ -141,7 +185,7 @@ export default function HeaderLinks(props: {
             </Text>
           </Flex>
           <Flex flexDirection="column">
-            <MenuItem
+            {/* <MenuItem
               _hover={{ bg: 'none' }}
               _focus={{ bg: 'none' }}
               px="0"
@@ -158,7 +202,7 @@ export default function HeaderLinks(props: {
               mb="10px"
             >
               <ItemContent info="Horizon Design System Free" />
-            </MenuItem>
+            </MenuItem> */}
           </Flex>
         </MenuList>
       </Menu>
@@ -174,7 +218,7 @@ export default function HeaderLinks(props: {
             me="10px"
           />
         </MenuButton>
-        <MenuList
+        {/* <MenuList
           boxShadow={shadow}
           p="20px"
           me={{ base: '30px', md: 'unset' }}
@@ -222,7 +266,7 @@ export default function HeaderLinks(props: {
               </Button>
             </Link>
           </Flex>
-        </MenuList>
+        </MenuList> */}
       </Menu>
 
       <Button
@@ -244,7 +288,9 @@ export default function HeaderLinks(props: {
         />
       </Button>
       <Menu>
-        <MenuButton p="0px" style={{ position: 'relative' }}>
+        <MenuButton p="0px" style={{ position: 'relative' }}
+          onClick={handleClick}
+        >
           <Box
             _hover={{ cursor: 'pointer' }}
             color="white"
@@ -259,7 +305,8 @@ export default function HeaderLinks(props: {
             </Text>
           </Center>
         </MenuButton>
-        <MenuList
+        {/* <button onClick={handleClick}> Show Wallet Details </button> */}
+        {/* <MenuList
           boxShadow={shadow}
           p="0px"
           mt="10px"
@@ -279,10 +326,18 @@ export default function HeaderLinks(props: {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, Adela
+              👋&nbsp; Hey, Adela {JSON.stringify(useActiveWallet)}
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">
+            <MenuItem
+              _hover={{ bg: 'none' }}
+              _focus={{ bg: 'none' }}
+              borderRadius="8px"
+              px="14px"
+            >
+              <Text fontSize="sm">Wallet Add: {user != null && shortenAddress(client?.account.address)}</Text> 
+            </MenuItem>
             <MenuItem
               _hover={{ bg: 'none' }}
               _focus={{ bg: 'none' }}
@@ -305,11 +360,12 @@ export default function HeaderLinks(props: {
               color="red.400"
               borderRadius="8px"
               px="14px"
+              onClick={() => window.location.href = "/"}
             >
               <Text fontSize="sm">Log out</Text>
             </MenuItem>
           </Flex>
-        </MenuList>
+        </MenuList> */}
       </Menu>
     </Flex>
   );
