@@ -24,6 +24,7 @@ import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 // Assets
+import avatar from '/public/img/avatars/avatar.png';
 import navImage from '/public/img/layout/Navbar.png';
 import { FaEthereum } from 'react-icons/fa';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
@@ -300,9 +301,7 @@ export default function HeaderLinks(props: {
             borderRadius={'50%'}
           />
           <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
-            <Text fontSize={'xs'} fontWeight="bold" color={'white'}>
-              AP
-            </Text>
+            <Image src={avatar.src} borderRadius="16px" mb="0px" alt="" />
           </Center>
         </MenuButton>
         {/* <button onClick={handleClick}> Show Wallet Details </button> */}
