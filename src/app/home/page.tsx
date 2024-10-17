@@ -114,6 +114,7 @@ import BuyCrypto from 'components/card/BuyCrypto';
 import SellAssets from 'components/card/SellAssets';
 import DepositFunds from 'components/card/DepositFunds';
 import WithdrawFunds from 'components/card/WithdrawFunds';
+import GoalTrackerLong from 'views/admin/default/components/GoalTrackerLong';
 
 import {
   MdAddTask,
@@ -616,7 +617,7 @@ export default function NftMarketplace() {
                   currentbid="0"
                   download="#"
                 />
-                <BuyCrypto
+                {/* <BuyCrypto
                   name="Cryptocurrencies"
                   author="Coming Soon"
                   bidders={[
@@ -627,7 +628,8 @@ export default function NftMarketplace() {
                   image={Nft3}
                   currentbid="0"
                   download="#"
-                />
+                /> */}
+                <GoalTrackerLong/>
               </SimpleGrid>
             </Flex>
           </Flex>
