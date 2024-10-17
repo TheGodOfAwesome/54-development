@@ -220,6 +220,7 @@ export default function NftMarketplace() {
   const TOKEN_CONTRACT = "0xC92575734B437DF10bc44505D96Ac9a555D1740A";
   const DROP_CONTRACT = "0xfbE5435Eb4ffD7AFe60A289dAE2101539feD80F8";
   const DEX_CONTRACT = "0xbe3770d65275aF5f0c56ee4dde13747D4B15c7d1";
+  const USDC_CONTRACT = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 
   // const { contract: tokenContract } = useContract
 
@@ -234,6 +235,18 @@ export default function NftMarketplace() {
         client: client3rdWeb,
         chain: defineChain(baseSepolia),
         address: DROP_CONTRACT
+      }),
+      address: walletAddress as `0x${string}` || ""  as `0x${string}`
+    }
+  );
+
+  const {data: blncOfERC20USDC} = useReadContract(
+    balanceOfERC20,
+    {
+      contract: getContract({
+        client: client3rdWeb,
+        chain: defineChain(baseSepolia),
+        address: USDC_CONTRACT
       }),
       address: walletAddress as `0x${string}` || ""  as `0x${string}`
     }
@@ -385,7 +398,13 @@ export default function NftMarketplace() {
             gap="20px"
             mb="20px"
           >
-            <MiniStatistics growth="+0%" name="Total Balance" value="$0.00" />
+            <MiniStatistics 
+              growth="+0%" 
+              name="Cash Balance" 
+              value={(walletAddress && blncOfERC20USDC) ? 
+                `$${toEther(blncOfERC20USDC * BigInt(10**12))}` : 
+                "$0.00"}  
+            />
             <MiniStatistics
               startContent={
                 <IconBox
