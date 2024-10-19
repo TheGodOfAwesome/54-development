@@ -8,6 +8,7 @@ import { VSeparator } from 'components/separator/Separator';
 
 export default function Conversion(props: { [x: string]: any }) {
 	const { ...rest } = props;
+	const assetData = [63, 25];
 
 	// Chakra Color Mode
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -31,7 +32,7 @@ export default function Conversion(props: { [x: string]: any }) {
 				</Select>
 			</Flex>
 
-			<PieChart h='100%' w='100%' chartData={pieChartData} chartOptions={pieChartOptions} />
+			<PieChart h='100%' w='100%' chartData={assetData} chartOptions={pieChartOptions} />
 			<Card
 				bg={cardColor}
 				flexDirection='row'
