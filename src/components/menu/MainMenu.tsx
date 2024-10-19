@@ -42,19 +42,22 @@ export default function Banner(props: { [x: string]: any }) {
 	return (
 		<Menu isOpen={isOpen1} onClose={onClose1}>
 			<MenuButton
+				// hidden={true}
 				alignItems='center'
 				justifyContent='center'
-				bg={bgButton}
-				_hover={bgHover}
-				_focus={bgFocus}
-				_active={bgFocus}
+				backgroundColor="transparent"
+				// bg={bgButton}
+				// _hover={bgHover}
+				// _focus={bgFocus}
+				// _active={bgFocus}
 				w='37px'
 				h='37px'
+				disabled={true}
 				lineHeight='100%'
 				onClick={onOpen1}
-				borderRadius='10px'
+				// borderRadius='10px'
 				{...rest}>
-				<Icon as={MdOutlineMoreHoriz} color={iconColor} w='24px' h='24px' />
+				{/* <Icon as={MdOutlineMoreHoriz} color={iconColor} w='24px' h='24px' /> */}
 			</MenuButton>
 			<MenuList
 				w='150px'
