@@ -127,12 +127,12 @@ export default function AdminNavbar (props: {
             <Link href="/home" paddingLeft="30px" _hover={{ color: { mainText } }}>
               Home
             </Link>
-            <Link href="/portfolio" paddingLeft="30px" _hover={{ color: { mainText } }}>
+            {/* <Link href="/portfolio" paddingLeft="30px" _hover={{ color: { mainText } }}>
               Portfolio
             </Link>
             <Link  href="/profile" paddingLeft="30px" _hover={{ color: { mainText } }}>
               Profile
-            </Link>
+            </Link> */}
           </article>
 
           
