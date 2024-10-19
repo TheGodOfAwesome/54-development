@@ -489,6 +489,7 @@ export default function BuyStocks(props: {
               borderRadius="70px"
               px="24px"
               py="5px"
+              isDisabled={true}
             >
               Place Order
             </Button>
