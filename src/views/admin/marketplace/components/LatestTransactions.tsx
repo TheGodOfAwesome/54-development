@@ -235,7 +235,7 @@ export default function LatestTransactions(props: { tableData: any }) {
           </Thead>
           <Tbody>
             {/* Show all rows */}
-            {table.getRowModel().rows.map((row) => (
+            {/* {table.getRowModel().rows.map((row) => (
               <Tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <Td
@@ -251,7 +251,7 @@ export default function LatestTransactions(props: { tableData: any }) {
                   </Td>
                 ))}
               </Tr>
-            ))}
+            ))} */}
           </Tbody>
         </Table>
       </Box>
