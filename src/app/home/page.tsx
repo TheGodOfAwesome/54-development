@@ -27,8 +27,8 @@ import { useSearchParams, redirect } from 'next/navigation';
 
 import supabase from 'config/supabaseClient';
 
-import { createThirdwebClient, defineChain, getContract, toEther } from 'thirdweb';
-import { ConnectButton, useActiveWalletConnectionStatus, useConnectModal, useActiveAccount, useSwitchActiveWalletChain, useReadContract, TransactionButton } from "thirdweb/react";
+import { createThirdwebClient, defineChain, getContract, toEther, getUser, prepareContractCall } from 'thirdweb';
+import { ConnectButton, useActiveWalletConnectionStatus, useConnectModal, useActiveAccount, useSwitchActiveWalletChain, useReadContract, TransactionButton, useSendTransaction } from "thirdweb/react";
 import {sepolia, baseSepolia, arbitrumSepolia} from "thirdweb/chains";
 import { smartWallet } from "thirdweb/wallets";
 import { claimTo as claimERC20, balanceOf as balanceOfERC20 } from "thirdweb/extensions/erc20";
@@ -213,6 +213,8 @@ export default function NftMarketplace() {
   const [goalFive, setGoalFive] = useState(false);
   const [goalSix, setGoalSix] = useState(false);
 
+  const [amountPaid, setAmountPaid] = useState(1);
+
   const toast = useToast();
 
   const account = useActiveAccount();
@@ -229,6 +231,14 @@ export default function NftMarketplace() {
   // const sdk = useSDK();
   // const blnc = 
 
+  const { mutate: sendTx, data: transactionResult } = useSendTransaction();
+
+  const USDC_CONTRACT_RETRIEVED = getContract({
+    client: client3rdWeb,
+    chain: defineChain(baseSepolia),
+    address: USDC_CONTRACT
+  });
+
   const {data: blncOfERC20} = useReadContract(
     balanceOfERC20,
     {
@@ -244,11 +254,7 @@ export default function NftMarketplace() {
   const {data: blncOfERC20USDC} = useReadContract(
     balanceOfERC20,
     {
-      contract: getContract({
-        client: client3rdWeb,
-        chain: defineChain(baseSepolia),
-        address: USDC_CONTRACT
-      }),
+      contract: USDC_CONTRACT_RETRIEVED,
       address: walletAddress as `0x${string}` || ""  as `0x${string}`
     }
   );
@@ -982,6 +988,26 @@ export default function NftMarketplace() {
             <AspectRatio ratio={7 / 5}>
               <Image src={sandp.src} w={'100%'} borderRadius="20px" alt="" />
             </AspectRatio>
+
+            <br/>
+
+            <p>Amount to Invest</p>
+
+            <NumberInput 
+              defaultValue={1} 
+              min={1} 
+              max={Math.floor(walletAddress && blncOfERC20USDC ? toEther(blncOfERC20USDC * BigInt(10 ** 12)) : 0)} 
+              value={amountPaid} 
+              onChange={(event)=>{setAmountPaid(Number(event))}} 
+              isDisabled={Math.floor(walletAddress && blncOfERC20USDC ? toEther(blncOfERC20USDC * BigInt(10 ** 12)) : 0) < 1}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+
             <br/>
             <TransactionButton
               style={{
@@ -992,13 +1018,22 @@ export default function NftMarketplace() {
               transaction={()=> claimERC20({
                 contract: tokenContractSPY,
                 to:  walletAddress as `0x${string}` || ""  as `0x${string}`,
-                quantity: "10"
+                quantity: amountPaid.toString()
               })}
               onError={async (e) => {
                 alert("Quick Invest Error" + JSON.stringify(e.message))
               }}
               onTransactionSent={async () => {
                 alert("Quick Invest Started")
+
+                const transaction = prepareContractCall({
+                  contract: USDC_CONTRACT_RETRIEVED,
+                  method: "function transfer(address to, uint256 value)",
+                  params: ["0xD15BE984F5e58358b905B19e8fdAFced86954970", BigInt(amountPaid * (10 ** 6))],
+                });
+                
+                const result = await sendTx(transaction);
+                console.log(result);
               }}
               onTransactionConfirmed={async (res) => {
                 alert("Quick Invest Completed at " + res.transactionHash + " to see more visit " + "https://sepolia.basescan.org/tx/" + res.transactionHash)
