@@ -996,10 +996,10 @@ export default function NftMarketplace() {
             <NumberInput 
               defaultValue={1} 
               min={1} 
-              max={Math.floor(walletAddress && blncOfERC20USDC ? toEther(blncOfERC20USDC * BigInt(10 ** 12)) : 0)} 
+              max={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0)} 
               value={amountPaid} 
               onChange={(event)=>{setAmountPaid(Number(event))}} 
-              isDisabled={Math.floor(walletAddress && blncOfERC20USDC ? toEther(blncOfERC20USDC * BigInt(10 ** 12)) : 0) < 1}
+              isDisabled={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0) < 1}
             >
               <NumberInputField />
               <NumberInputStepper>
