@@ -166,6 +166,8 @@ import USDC from 'img/crypto/usdc.png';
 import stocks from 'img/products/stocks.jpg';
 import sandp from 'img/stocks/SANDP.png';
 
+import mobilemoney from '/public/img/avatars/EcoCash.jpg';
+
 export default function NftMarketplace() {
   // Chakra Color Mode
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -958,26 +960,96 @@ export default function NftMarketplace() {
           </ModalBody>
         </ModalContent>
       </Modal>
+
       <Modal size="lg" isOpen={depositFunds} onClose={()=>setDepositFunds(false)}>
         <ModalOverlay />
         <ModalContent  style={{ width:"600px", maxWidth:"98vw"}}>
           <ModalHeader>Deposit Funds into your Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <DepositFunds image={undefined} name={''} author={''} bidders={[]} download={''} currentbid={''}/>
+            <AspectRatio ratio={7 / 5}>
+              <Image src={mobilemoney.src} w={'100%'} borderRadius="20px" alt="" />
+            </AspectRatio>
+
+            <br/>
+
+            <p>Amount to Deposit</p>
+
+            <NumberInput 
+              defaultValue={1} 
+              min={1} 
+              max={1000} 
+              onChange={(event)=>{}} 
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+
+            <br/>
+
+            <Button
+              style={{
+                width:"100%", 
+                color:"white",
+                backgroundColor: "#4326ff"
+              }}
+              onClick={()=>{setDepositFunds(false)}}
+            > 
+              Deposit Funds
+            </Button>
+
           </ModalBody>
         </ModalContent>
       </Modal>
+
       <Modal size="lg" isOpen={withdrawFunds} onClose={()=>setWithdrawFunds(false)}>
         <ModalOverlay />
         <ModalContent  style={{ width:"600px", maxWidth:"98vw"}}>
           <ModalHeader>Withdraw Funds from your Wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <WithdrawFunds image={undefined} name={''} author={''} bidders={[]} download={''} currentbid={''}/>
+            <AspectRatio ratio={7 / 5}>
+              <Image src={mobilemoney.src} w={'100%'} borderRadius="20px" alt="" />
+            </AspectRatio>
+
+            <br/>
+
+            <p>Amount to Withdraw</p>
+
+            <NumberInput 
+              defaultValue={1} 
+              min={1} 
+              max={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0)} 
+              value={amountPaid} 
+              onChange={(event)=>{}} 
+              isDisabled={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0) < 1}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+
+            <br/>
+
+            <Button
+              style={{
+                width:"100%", 
+                color:"white",
+                backgroundColor: "#4326ff"
+              }}
+              onClick={()=>{setWithdrawFunds(false)}}
+            > 
+              Withdraw Funds
+            </Button>
           </ModalBody>
         </ModalContent>
       </Modal>
+
       <Modal size="lg" isOpen={claimTokens} onClose={()=>setClaimTokens(false)}>
         <ModalOverlay />
         <ModalContent  style={{ width:"600px", maxWidth:"98vw"}}>
