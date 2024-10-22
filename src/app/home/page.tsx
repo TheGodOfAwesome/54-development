@@ -38,12 +38,20 @@ import { claimTo as claimERC20, balanceOf as balanceOfERC20 } from "thirdweb/ext
 import {
   Box,
   Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+
   Flex,
+
   Image,
   Input,
   Icon,
+  
   Select,
   SimpleGrid,
+  
   Text,
   useColorModeValue,
   AspectRatio,
@@ -94,13 +102,19 @@ import PieCard from 'views/admin/default/components/PieCard';
 import Tasks from 'views/admin/default/components/Tasks';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import WeeklyRevenue from 'views/admin/default/components/WeeklyRevenue';
-import tableDataCheck from 'views/admin/default/variables/tableDataCheck';
-import tableDataComplex from 'views/admin/default/variables/tableDataComplex';
+import DevelopmentTable from 'views/admin/dataTables/components/DevelopmentTable';
+import TableTopCreators from 'views/admin/marketplace/components/TableTopCreators';
+import Portfolio from 'views/admin/marketplace/components/Portfolio';
+
+import tableDataDevelopment from 'views/admin/dataTables/variables/tableDataDevelopment';
+import tableDataCheck from 'views/admin/dataTables/variables/tableDataCheck';
+import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
+import tableDataComplex from 'views/admin/dataTables/variables/tableDataComplex';
+import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
 
 import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
 import NFT from 'components/card/NFT';
 import Card from 'components/card/Card';
-import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
 
 import LatestTransactions from 'views/admin/marketplace/components/LatestTransactions';
 import PieChart from 'views/admin/default/components/AssetPieChart';
@@ -216,6 +230,9 @@ export default function NftMarketplace() {
   const [goalSix, setGoalSix] = useState(false);
 
   const [amountPaid, setAmountPaid] = useState(1);
+
+  const [growthChart, setGrowthChart] = useState(true);
+  const [portfolio, setPortfolio] = useState(false);
 
   const toast = useToast();
 
@@ -348,6 +365,58 @@ export default function NftMarketplace() {
       // Handle error here (e.g., display an error message to the user)
     }
   };
+
+  type RowObj = {
+    name: string[];
+    artworks: number; 
+    value: number;
+    rating: number; 
+  };
+
+  let portfolioDataset: RowObj[] = [];
+
+  const portfolioData: RowObj[] = [
+    {
+      name: ["USDc Cash", USDC.src],
+      artworks : 9821,
+      value: 0,
+      rating:97
+    },
+    {
+      name: ["S&P 500", SPY.src],
+      artworks : 7032,
+      value: 1,
+      rating:87
+    }
+  ];
+
+  const handlePortfolioValue = (name: string, value: number) => {
+    if (name == "USDc Cash") {
+      return blncOfERC20USDC;
+    }
+  }
+
+  const processPortfolioData = () => {
+    if (blncOfERC20 > 0) {
+      portfolioDataset.push({
+        name: ["USDC Cash", USDC.src],
+        artworks : 1,
+        value: Number(toEther(blncOfERC20USDC * BigInt(10**12))),
+        rating:50
+      })
+    }
+
+    if (blncOfERC20 > 0) {
+      portfolioDataset.push({
+        name: ["S&P 500", SPY.src],
+        artworks : 1,
+        value: Number(toEther(blncOfERC20)),
+        rating:50
+      })
+    }
+
+    return portfolioDataset;
+  }
 
   useEffect(() => {
     // const searchParams = useSearchParams();
@@ -538,45 +607,22 @@ export default function NftMarketplace() {
                 align={{ base: 'start', md: 'center' }}
               >
                 <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                  Growth Chart
+                  {(growthChart) ? "Growth Chart" : "Portfolio"}
                 </Text>
-                {/* <Flex
-                  align="center"
-                  me="20px"
-                  ms={{ base: '24px', md: '0px' }}
-                  mt={{ base: '20px', md: '0px' }}
-                >
-                  <Link
-                    href="#art"
-                    color={textColorBrand}
-                    fontWeight="500"
-                    me={{ base: '34px', md: '44px' }}
-                  >
-                    Art
-                  </Link>
-                  <Link
-                    href="#music"
-                    color={textColorBrand}
-                    fontWeight="500"
-                    me={{ base: '34px', md: '44px' }}
-                  >
-                    Music
-                  </Link>
-                  <Link
-                    href="#collectibles"
-                    color={textColorBrand}
-                    fontWeight="500"
-                    me={{ base: '34px', md: '44px' }}
-                  >
-                    Collectibles
-                  </Link>
-                  <Link href="#sports" color={textColorBrand} fontWeight="500">
-                    Sports
-                  </Link>
-                </Flex> */}
+
+                <Breadcrumb>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink onClick={()=>{setGrowthChart(true)}}>Growth Chart</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink onClick={()=>{setGrowthChart(false)}}>Portfolio</BreadcrumbLink>
+                  </BreadcrumbItem>
+                </Breadcrumb> 
+                
               </Flex>
+              
               <SimpleGrid columns={{ base: 1 }} gap="20px">
-                <TotalSaved/>
+                {(growthChart) ? <TotalSaved/> : <Portfolio tableData={processPortfolioData()} />}
               </SimpleGrid>
               <Text
                 mt="45px"

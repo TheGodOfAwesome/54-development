@@ -203,7 +203,7 @@ export default function GoalTrackerLong(props: { [x: string]: any }) {
 				w='100%' 
 				{...rest}
 				minH ={{ base: 'auto', lg: '365px', '2xl': '365px' }}
-				height ="610px"
+				height ="615px"
 			>
 				<Flex alignItems='center' w='100%' mb='30px'>
 					<IconBox
