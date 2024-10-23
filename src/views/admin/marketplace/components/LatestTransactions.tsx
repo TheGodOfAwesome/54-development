@@ -32,16 +32,16 @@ import supabase from 'config/supabaseClient';
 // Custom components
 // Assets
 
-// type RowObj = {
-//   transaction_type: string;
-//   ticker_symbol: string;
-//   token_value: number;
-// };
+type TransactionRowObj = {
+  action: string;
+  asset: string;
+  value: number;
+};
 
 type RowObj = {
-  name: string[];
-  artworks: number;
-  rating: number;
+  action: string;
+  asset: string;
+  value: number;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
@@ -57,39 +57,12 @@ export default function LatestTransactions(props: { tableData: any }) {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [transactionData, setTransactionData] = useState<any[]>(null);
 
-  useEffect(() => {
-
-    const fetchUserData = async () => {
-      const {data, error} = 
-        await supabase
-          .from('transactions') // Replace with your table name
-          .select('transaction_type, ticker_symbol, token_value') // Select all columns (adjust as needed)
-          .order('created_at', { ascending: false }) // Order by created_at descending
-          .limit(20) // Limit to 20 rows
-      
-      if (error) { 
-        setFetchError("Couldn't fetch transactions!");
-        console.log("Error: ");
-        console.log(error);
-      }
-
-      if (data) {
-        setTransactionData(data);
-        setFetchError(null);
-        console.log("Data: ");
-        console.log(data);
-      }
-    }
-    
-    fetchUserData();
-  },[])
-
 
   let defaultData = tableData;
   const columns = [
     // columnHelper.accessor('action', {
-    columnHelper.accessor('name', {
-      id: 'name',
+    columnHelper.accessor('action', {
+      id: 'action',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -102,16 +75,16 @@ export default function LatestTransactions(props: { tableData: any }) {
       ),
       cell: (info: any) => (
         <Flex align="center">
-          <Avatar src={info.getValue()[1]} w="30px" h="30px" me="8px" />
+          {/* <Avatar src={info.getValue()[1]} w="30px" h="30px" me="8px" /> */}
           <Text color={textColor} fontSize="sm" fontWeight="600">
-            {info.getValue()[0]}
+            {info.getValue()}
           </Text>
         </Flex>
       ),
     }),
     // columnHelper.accessor('asset', {
-    columnHelper.accessor('artworks', {
-      id: 'artworks',
+    columnHelper.accessor('asset', {
+      id: 'asset',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -129,8 +102,8 @@ export default function LatestTransactions(props: { tableData: any }) {
       ),
     }),
     // columnHelper.accessor('value', {
-    columnHelper.accessor('rating', {
-      id: 'rating',
+    columnHelper.accessor('value', {
+      id: 'value',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -157,7 +130,7 @@ export default function LatestTransactions(props: { tableData: any }) {
   ];
   const [data, setData] = React.useState(() => [...defaultData]);
   const table = useReactTable({
-    data,
+    data: defaultData,
     columns,
     state: {
       sorting,
@@ -172,7 +145,7 @@ export default function LatestTransactions(props: { tableData: any }) {
     <Flex
       direction="column"
       w="100%"
-      height="600px" // Set a fixed height for the table container (adjust as needed)
+      height="625px" // Set a fixed height for the table container (adjust as needed)
       overflowY="auto" // Enable vertical scrollbar for body
       overflowX={{ sm: 'scroll', lg: 'hidden' }} // Horizontal scrollbar on small screens
       paddingTop="20px"
@@ -235,7 +208,7 @@ export default function LatestTransactions(props: { tableData: any }) {
           </Thead>
           <Tbody>
             {/* Show all rows */}
-            {/* {table.getRowModel().rows.map((row) => (
+            {table.getRowModel().rows.map((row) => (
               <Tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <Td
@@ -251,7 +224,7 @@ export default function LatestTransactions(props: { tableData: any }) {
                   </Td>
                 ))}
               </Tr>
-            ))} */}
+            ))}
           </Tbody>
         </Table>
       </Box>

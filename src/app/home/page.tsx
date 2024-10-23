@@ -33,6 +33,8 @@ import {sepolia, baseSepolia, arbitrumSepolia} from "thirdweb/chains";
 import { smartWallet } from "thirdweb/wallets";
 import { claimTo as claimERC20, balanceOf as balanceOfERC20 } from "thirdweb/extensions/erc20";
 
+import { Alchemy, Network, AssetTransfersCategory } from "alchemy-sdk";
+
 // Chakra imports
 
 import {
@@ -117,6 +119,7 @@ import NFT from 'components/card/NFT';
 import Card from 'components/card/Card';
 
 import LatestTransactions from 'views/admin/marketplace/components/LatestTransactions';
+import LastTransactions from 'views/admin/marketplace/components/LastTransactions';
 import PieChart from 'views/admin/default/components/AssetPieChart';
 import MiniStatistics from 'components/card/MiniStatistics';
 import IconBox from 'components/icons/IconBox';
@@ -202,6 +205,12 @@ export default function NftMarketplace() {
     clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
   });
 
+  const config = {
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+    network: Network.BASE_SEPOLIA,
+  };
+
+  const alchemy = new Alchemy(config);
 
   const searchParams = useSearchParams();
   
@@ -233,6 +242,9 @@ export default function NftMarketplace() {
 
   const [growthChart, setGrowthChart] = useState(true);
   const [portfolio, setPortfolio] = useState(false);
+
+  const [transferTransactions, setTransferTransactions] = useState([]);
+  const [transactionHistory, setTransactionHistory] = useState([]);
 
   const toast = useToast();
 
@@ -300,6 +312,15 @@ export default function NftMarketplace() {
   function removeEmptyStrings(arr: string[]): string[] {
     return arr.filter((element) => element.trim() !== "");
   }
+
+  // Custom components
+  // Assets
+
+  type TransactionRowObj = {
+    action: string;
+    asset: string;
+    value: number;
+  };
   
   type User = {
     // Define the properties of your user object here
@@ -418,6 +439,41 @@ export default function NftMarketplace() {
     return portfolioDataset;
   }
 
+  const processTransactionHistory = async () => {
+    // Address we want get transfers from
+    const toAddress = walletAddress;
+
+    const res = await alchemy.core.getAssetTransfers({
+      fromBlock: "0x0",
+      fromAddress: "0x0000000000000000000000000000000000000000",
+      toAddress: toAddress,
+      excludeZeroValue: true,
+      category: [AssetTransfersCategory.ERC20],
+    });
+
+    const transfers = res.transfers;
+    setTransferTransactions(transfers);
+
+    // Create a new array with the last 10 transfers in reverse order
+    let last10Transfers: TransactionRowObj[] = [];
+    last10Transfers = transfers
+      .slice(-10) // Get the last 10 transfers
+      .reverse() // Reverse the order
+      .map(transfer => {
+        return {
+          action: transfer.to === toAddress ? "transfer from" :"transfer to",
+          asset: transfer.asset,
+          value: transfer.value,
+        };
+      });
+
+    setTransactionHistory(last10Transfers);
+    // console.log("Last 10 Transfers:", last10Transfers);
+    // alert(last10Transfers.length);  
+    return (last10Transfers.length > 0) ? last10Transfers: [{action: "", asset: "", value: 0}, {action: "", asset: "", value: 0}];
+    // return last10Transfers;/
+  }
+
   useEffect(() => {
     // const searchParams = useSearchParams();
     // const switchChain = useSwitchActiveWalletChain();
@@ -465,6 +521,41 @@ export default function NftMarketplace() {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}');
       // alert(JSON.stringify(userData));
     }
+
+    const fetchTrnasactions = async () => {
+      // Address we want get transfers from
+      const toAddress = walletAddress;
+
+      const res = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        fromAddress: "0x0000000000000000000000000000000000000000",
+        toAddress: toAddress,
+        excludeZeroValue: true,
+        category: [AssetTransfersCategory.ERC20],
+      });
+
+      const transfers = res.transfers;
+      setTransferTransactions(transfers);
+
+      // Create a new array with the last 10 transfers in reverse order
+      const last10Transfers: TransactionRowObj[] = transfers
+        .slice(-10) // Get the last 10 transfers
+        .reverse() // Reverse the order
+        .map(transfer => {
+          return {
+            action: transfer.to === toAddress ? "Sold" :"Bought",
+            asset: transfer.asset,
+            value: transfer.value,
+          };
+        });
+  
+      setTransactionHistory(last10Transfers);
+      console.log("Last 10 Transfers:", last10Transfers);
+    }
+
+    if (walletAddress)
+      fetchTrnasactions();
+    
   },[])
 
   return (
@@ -695,7 +786,9 @@ export default function NftMarketplace() {
               <PieChart/>
             </Card>
             <Card p="0px">            
-              <LatestTransactions tableData={tableDataTopCreators} />
+              <LatestTransactions tableData={transactionHistory} />
+              {/* <LastTransactions tableData={processTransactionHistory()} /> */}
+              {/* <LastTransactions tableData={transactionHistory} /> */}
             </Card>
           </Flex>
         </Grid>
